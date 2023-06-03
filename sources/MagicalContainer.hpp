@@ -6,22 +6,15 @@
 #define MAGICAL_ITERATORS_MAGICALCONTAINER_H
 #include <vector>
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 typedef struct Node{
-    int data = 0;
+    int data;
     struct Node *prev;
     struct Node *next;
-    Node(){
-        data = 0;
-        prev = nullptr;
-        next = nullptr;
-    }
-    Node(int data){
-        this->data = data;
-        prev = nullptr;
-        next = nullptr;
-    }
+    Node(): data(0), prev(nullptr), next(nullptr){}
+    Node(int data): data(data), prev(nullptr), next(nullptr){}
     int operator*() const{
         return data;
     }
@@ -33,11 +26,7 @@ namespace ariel{
         Node *tail;
         int sizeOfContainer;
     public:
-        MagicalContainer() {
-            head = new node();
-            tail = head;
-            sizeOfContainer = 0;
-        }
+        MagicalContainer(): head(new node()), tail(head), sizeOfContainer(0){}
 
         virtual ~MagicalContainer() {
             Node *temp = head;
@@ -48,13 +37,18 @@ namespace ariel{
             }
         };
 
+        MagicalContainer(const MagicalContainer &other) = delete;
+        MagicalContainer(MagicalContainer &&other) = delete;
+        MagicalContainer &operator=(const MagicalContainer &other) = delete;
+        MagicalContainer &operator=(MagicalContainer &&other) = delete;
+
         int size() const;
 
-        int at(int i) const;
+        int at(int elm) const;
 
-        void addElement(int i);
+        void addElement(int elm);
 
-        int removeElement(int i);
+        int removeElement(int elm);
 
         void print();
 
@@ -113,12 +107,14 @@ namespace ariel{
             Node *last_prime;
             Node *current_prime;
 
-            bool isPrime(int num) {
-                if (num < 2)
+            static bool isPrime(int num) {
+                if (num < 2){
                     return false;
-                for (int i = 2; i * i <= num; i++) {
-                    if (num % i == 0)
+                }
+                for (int i = 3; i < sqrt(num); i++) {
+                    if (num % i == 0){
                         return false;
+                    }
                 }
                 return true;
             }
@@ -165,8 +161,9 @@ namespace ariel{
             PrimeIterator &operator++() {
                 if (current_prime != nullptr) {
                     current_prime = current_prime->next;
-                    while (current_prime != nullptr && !isPrime(current_prime->data))
+                    while (current_prime != nullptr && !isPrime(current_prime->data)){
                         current_prime = current_prime->next;
+                    }
                 }
                 return *this;
             }
@@ -175,8 +172,9 @@ namespace ariel{
                 PrimeIterator temp = *this;
                 if (current_prime != nullptr) {
                     current_prime = current_prime->next;
-                    while (current_prime != nullptr && !isPrime(current_prime->data))
+                    while (current_prime != nullptr && !isPrime(current_prime->data)){
                         current_prime = current_prime->next;
+                    }
                 }
                 return temp;
             }
@@ -189,19 +187,10 @@ namespace ariel{
             Node *current_node;
             bool start_or_end;
         public:
-            SideCrossIterator() {
-                start_node = nullptr;
-                end_node = nullptr;
-                current_node = nullptr;
-                start_or_end = false;
-            }
+            SideCrossIterator(): start_node(nullptr), end_node(nullptr), current_node(nullptr), start_or_end(false) {}
 
-            SideCrossIterator(const MagicalContainer &container) {
-                start_node = container.head;
-                end_node = container.tail;
-                current_node = start_node;
-                start_or_end = false;
-            }
+            SideCrossIterator(const MagicalContainer &container): start_node(container.head), end_node(container.tail),
+                    current_node(container.head), start_or_end(false) {}
 
             SideCrossIterator &operator++() {
                 this->current_node = this->current_node->next;

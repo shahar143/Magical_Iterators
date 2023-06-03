@@ -9,12 +9,12 @@ int ariel::MagicalContainer::size() const {
     return sizeOfContainer;
 }
 
-int ariel::MagicalContainer::at(int i) const {
+int ariel::MagicalContainer::at(int elm) const {
     return 1;
 }
 
-void ariel::MagicalContainer::addElement(int i) {
-    node *newNode = new node(i);
+void ariel::MagicalContainer::addElement(int elm) {
+    node *newNode = new node(elm);
     if (this->size() == 0 || this->head == nullptr) {
         head = newNode;
         tail = newNode;
@@ -44,7 +44,7 @@ void ariel::MagicalContainer::addElement(int i) {
 }
 
 
-int ariel::MagicalContainer::removeElement(int i) {
+int ariel::MagicalContainer::removeElement(int elm) {
     return 1;
 }
 
